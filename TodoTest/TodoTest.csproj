@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.12.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MongoCRUDLibrary">
+      <HintPath>..\..\MongoCRUD\MongoCRUDLibrary\bin\Release\netcoreapp3.1\MongoCRUDLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RenderFragments\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,8 @@
+﻿<div class="jumbotron jumbotron-fluid text-center text-muted bg-dark" 
+     style="margin-bottom:0%;margin-top:5%">
+    <h3>Temppase &copy; @(time = DateTime.Now.ToString("yyyy")) </h3>
+</div>
+@code {
+    [Parameter]
+    public string time { get; set; }
+}

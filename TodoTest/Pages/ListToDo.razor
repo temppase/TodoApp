@@ -1,0 +1,42 @@
+﻿<table class="table table-sm bg-dark text-muted">
+    <thead>
+        <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Label</th>
+            <th scope="col">Description</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var r in Todos)
+        {
+            <tr>
+                <td>@r.Date.ToString("yyyy.MM.dd")</td>
+                <td>@r.Label</td>
+                <td>@r.Description</td>
+                <td>@r.Priority<br />@r.Status</td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+@code {
+    MongoCRUD mydb = new MongoCRUD("MyMongoDb");
+    TodoModel todo = new TodoModel();
+    List<TodoModel> Todos;
+    protected override Task OnInitializedAsync()
+    {
+        GetData();
+        return base.OnInitializedAsync();
+    }
+    public void GetData()
+    {
+        //if (ListAll != null)
+        //{
+        //    ListAll.Clear();
+        //}
+        Todos = mydb.LoadRecords<TodoModel>(todo.Table);
+    }
+}

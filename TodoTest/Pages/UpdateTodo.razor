@@ -1,0 +1,149 @@
+﻿@page "/update/{IDset}"
+<h3 style="font-weight:bold">Update Todo</h3>
+<hr />
+@if (Deleted == "")
+{
+    <h5 style="font-weight:bold">@Updated.Label</h5>
+    <div class="row">
+        <div class="col-2" />
+        <div class="col-4">
+            <h5>@Updated.Description</h5>
+            <br />
+            <p>@Updated.Priority</p>
+            <br />
+            <p>@Updated.Status</p>
+        </div>
+    </div>
+
+    <hr />
+    <EditForm Model="@todo">
+        <div class="row">
+            <div class="col-2">
+                <button class="btn btn-primary btn-sm"
+                        type="submit"
+                        @onclick="UpdateLabel">
+                    Label
+                </button><br /><br />
+                <button class="btn btn-primary btn-sm"
+                        type="submit"
+                        @onclick="UpdateDescription">
+                    Description
+                </button><br /><br /><br />
+                <button class="btn btn-primary btn-sm"
+                        type="submit"
+                        @onclick="UpdateStatus">
+                    Status
+                </button>
+            </div>
+            <div class="col-3">
+                <InputText id="Label" @bind-Value="label" /><br /><br />
+                <InputTextArea id="Description" @bind-Value="description" /><br /><br />
+                <InputSelect id="Priority" @bind-Value="Prior">
+                    <option value=""></option>
+                    <option value="Hi">High</option>
+                    <option value="Med">Medium</option>
+                    <option value="Lo">Low</option>
+                </InputSelect>
+                <InputSelect id="Status" @bind-Value="Stat">
+                    <option value=""></option>
+                    <option value="Todo">Todo</option>
+                    <option value="Started">Started</option>
+                    <option value="Finished">Finished</option>
+                </InputSelect>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-danger btn-sm" @onclick="DeleteRecord">Delete</button>
+            </div>
+        </div>
+    </EditForm>
+}
+else
+{
+    <h3>@Deleted</h3>
+}
+
+@code {
+    MongoCRUD mydb = new MongoCRUD("MyMongoDb");
+    TodoModel todo = new TodoModel();
+    TodoModel Updated;
+    [Parameter]
+    public string IDset { get; set; }
+    public string Deleted { get; set; } = "";
+    [Parameter]
+    public string label { get; set; }
+    [Parameter]
+    public string description { get; set; }
+    [Parameter]
+    public string Prior { get; set; }
+    [Parameter]
+    public string Stat { get; set; }
+    protected override Task OnInitializedAsync()
+    {
+        GetTodo();
+        return base.OnInitializedAsync();
+    }
+    public void GetTodo()
+    {
+        Guid Id = new Guid(IDset);
+        Updated = mydb.LoadRecordById<TodoModel>(todo.Table, Id);
+
+    }
+    public void UpdateLabel()
+    {
+        Console.WriteLine($"     Update label ID: {IDset.ToString()}");
+        Guid Id = new Guid(IDset);
+        mydb.UpsertRecord(todo.Table, Id,
+                                new TodoModel
+                                {
+                                    Id = Id,
+                                    Date = DateTime.Now,
+                                    Label = label,
+                                    Description = Updated.Description,
+                                    Priority = Updated.Priority,
+                                    Status = Updated.Status
+                                });
+        label = "";
+        OnInitializedAsync();
+    }
+    public void UpdateDescription()
+    {
+        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
+        Guid Id = new Guid(IDset);
+        mydb.UpsertRecord(todo.Table, Id,
+                                new TodoModel
+                                {
+                                    Id = Id,
+                                    Date = DateTime.Now,
+                                    Label = Updated.Label,
+                                    Description = description,
+                                    Priority = Updated.Priority,
+                                    Status = Updated.Status
+                                });
+        description = "";
+        OnInitializedAsync();
+    }
+    public void UpdateStatus()
+    {
+        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
+        Guid Id = new Guid(IDset);
+        mydb.UpsertRecord(todo.Table, Id,
+                                new TodoModel
+                                {
+                                    Id = Id,
+                                    Date = DateTime.Now,
+                                    Label = Updated.Label,
+                                    Description = Updated.Description,
+                                    Priority = Prior,
+                                    Status = Stat
+                                });
+        description = "";
+        OnInitializedAsync();
+    }
+    public void DeleteRecord()
+    {
+        Guid Id = new Guid(IDset);
+        Console.WriteLine($"     Delete ID: {IDset.ToString()}");
+        mydb.DeleteRecord<TodoModel>(todo.Table, Id);
+        Deleted = "Record deleted...";
+    }
+}
