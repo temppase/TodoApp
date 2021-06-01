@@ -11,4 +11,4 @@ Some remarks I made about mongodb:
 So if you need time, you need to figure out how to fix UTC. There can be many possibilities, but for example, 
 increasing or decreasing hours is problematic because summer and winter time are also used in Finland.
 
-## I found out that there is still least one bug left so I need to fix it...
+
