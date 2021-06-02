@@ -12,7 +12,7 @@
         @foreach (var r in Todos)
         {
             <tr>
-                <td>@r.Date.ToString("yyyy.MM.dd")</td>
+                <td>@r.LocalTime</td>
                 <td>@r.Label</td>
                 <td>@r.Description</td>
                 <td>@r.Priority<br />@r.Status</td>
