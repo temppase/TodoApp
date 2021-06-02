@@ -15,9 +15,9 @@
             <InputTextArea id="Description" @bind-Value="todo.Description" style="background-color:gray"/><br /><br />
             <InputSelect id="Priority" @bind-Value="todo.Priority" style="background-color:gray">
                 <option value=""></option>
-                <option value="Hi">High</option>
-                <option value="Med">Medium</option>
-                <option value="Lo">Low</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
             </InputSelect>
             <InputSelect id="Status" @bind-Value="todo.Status" style="background-color:gray">
                 <option value=""></option>
@@ -49,68 +49,23 @@
 
             @foreach (var r in ListAll)
             {
-                if (r.Priority == "Hi")
-                {
-                    <tr class="text-danger">
-                        <td>
-                            <a class="btn btn-primary btn-sm"
-                               href=@($"update/{IDset = r.Id.ToString()}")>
-                                Mod.
-                            </a>
-                        </td>
-                        <td>@r.Date.ToString("yyyy.MM.dd")</td>
-                        <td>@r.Label</td>
-                        <td>@r.Description</td>
-                        @if (r.Status == "Finished")
-                        {
 
-                            <td>
-                                <button class="btn btn-success btn-sm"
-                                        value="@r.Id"
-                                        @onclick="@(()=>IDset = r.Id.ToString())">
-                                    Sel.
-                                </button>
-                                <button class="btn btn-primary" @onclick="DeleteRecord">x</button>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>@r.Priority<br />@r.Status</td>
-                        }
+                <tr class="text-muted">
+                    <td>
+                        <a class="btn btn-primary btn-sm"
+                            href=@($"update/{IDset = r.Id.ToString()}")>
+                            Mod.
+                        </a>
+                    </td>
+                    <td>@r.Date.ToString("yyyy.MM.dd")</td>
+                    <td>@r.Label</td>
+                    <td>@r.Description</td>
+                    <td>@r.Priority<br />@r.Status</td>
+                </tr>
 
-                    </tr>
-                }
-                else
-                {
-                    <tr class="text-primary">
-                        <td>
-                            <a class="btn btn-primary btn-sm"
-                               href=@($"update/{IDset = r.Id.ToString()}")>
-                                Mod.
-                            </a>
-                        </td>
-                        <td>@r.Date.ToString("yyyy.MM.dd")</td>
-                        <td>@r.Label</td>
-                        <td>@r.Description</td>
-                        @if (r.Status == "Finished")
-                        {
 
-                            <td>
-                                <button class="btn btn-success btn-sm"
-                                        value="@r.Id"
-                                        @onclick="@(()=>IDset = r.Id.ToString())">
-                                    Sel.
-                                </button>
-                                <button class="btn btn-danger" @onclick="DeleteRecord">x</button>
-                            </td>
-
-                        }
-                        else
-                        {
-                            <td>@r.Priority<br />@r.Status</td>
-                        }
-                    </tr>
-                }
+               
+            }
 
 
 
@@ -145,6 +100,7 @@
                             new TodoModel
                             {
                                 Date = date,
+                                LocalTime = date.ToString("yyyy.MM.dd HH:mm"),
                                 Label = todo.Label,
                                 Description = todo.Description,
                                 Priority = todo.Priority,
@@ -156,13 +112,6 @@
         todo.Status = "";
         OnInitializedAsync();
     }
-    public void DeleteRecord()
-    {
-        Guid id = new Guid(IDset);
-        Console.WriteLine($"     Delete ID: {IDset}");
-        mydb.DeleteRecord<TodoModel>(todo.Table, id);
-        OnInitializedAsync();
-
-    }
+    
 
 }

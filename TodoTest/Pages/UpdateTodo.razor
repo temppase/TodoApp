@@ -36,15 +36,15 @@
                 </button>
             </div>
             <div class="col-3">
-                <InputText id="Label" @bind-Value="label" /><br /><br />
-                <InputTextArea id="Description" @bind-Value="description" /><br /><br />
-                <InputSelect id="Priority" @bind-Value="Prior">
+                <InputText id="Label" @bind-Value="label" style="background-color:gray"/><br /><br />
+                <InputTextArea id="Description" @bind-Value="description" style="background-color:gray"/><br /><br />
+                <InputSelect id="Priority" @bind-Value="Prior" style="background-color:gray">
                     <option value=""></option>
-                    <option value="Hi">High</option>
-                    <option value="Med">Medium</option>
-                    <option value="Lo">Low</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                 </InputSelect>
-                <InputSelect id="Status" @bind-Value="Stat">
+                <InputSelect id="Status" @bind-Value="Stat" style="background-color:gray">
                     <option value=""></option>
                     <option value="Todo">Todo</option>
                     <option value="Started">Started</option>
@@ -97,6 +97,7 @@ else
                                 {
                                     Id = Id,
                                     Date = DateTime.Now,
+                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
                                     Label = label,
                                     Description = Updated.Description,
                                     Priority = Updated.Priority,
@@ -114,6 +115,7 @@ else
                                 {
                                     Id = Id,
                                     Date = DateTime.Now,
+                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
                                     Label = Updated.Label,
                                     Description = description,
                                     Priority = Updated.Priority,
@@ -131,6 +133,7 @@ else
                                 {
                                     Id = Id,
                                     Date = DateTime.Now,
+                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
                                     Label = Updated.Label,
                                     Description = Updated.Description,
                                     Priority = Prior,
