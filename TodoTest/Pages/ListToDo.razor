@@ -1,14 +1,19 @@
 ﻿<CustomTable Items="TodosSorted">
     <TableHeader>
+        <GridColum ColumTitle="Date"
+                   OnSearchTextChange="@(e =>SearchTermChanged(e, "Date"))" />
         <GridColum ColumTitle="Label"
                    OnSearchTextChange="@(e =>SearchTermChanged(e, "Label"))" />
         <GridColum ColumTitle="Description"
                    OnSearchTextChange="@(e =>SearchTermChanged(e, "Description"))" />
+        <GridColum ColumTitle="Priority"
+                   OnSearchTextChange="@(e =>SearchTermChanged(e, "Priority"))" />
     </TableHeader>
     <RowTemplate Context="t">
-        <td>@t.Date</td>
+        <td>@t.LocalTime</td>
         <td>@t.Label</td>
-        <td>@t.Description</td>
+        <td>@t.Description <br /><em class="text-warning">Status: @t.Status</em></td>
+        <td class="text-warning">@t.Priority</td>
     </RowTemplate>
 </CustomTable>
 
@@ -39,6 +44,11 @@
 
         string searchText = changeEventArgs.Value.ToString();
         Console.WriteLine(searchText);
+        if (columTitle == "Date")
+        {
+            TodosSorted = Todos.Where(t => t.LocalTime.Contains
+            (searchText)).ToList();
+        }
         if (columTitle == "Label")
         {
             TodosSorted = Todos.Where(t => t.Label.Contains
@@ -49,5 +59,23 @@
             TodosSorted = Todos.Where(t => t.Description.Contains
             (searchText)).ToList();
         }
+        if (columTitle == "Priority")
+        {
+            TodosSorted = Todos.Where(t => t.Priority.Contains
+            (searchText, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
     }
+    //private void SearchDateChanged(ChangeEventArgs changeEventArgs, string columTitle)
+    //{
+
+    //    string searchText = changeEventArgs.Value.ToString();
+    //    Console.WriteLine(searchText);
+    //    if (columTitle == "Date")
+    //    {
+
+    //        TodosSorted = Todos.Where(t => t.LocalTime.Contains
+    //        (searchText)).ToList();
+    //    }
+
+    //}
 }
