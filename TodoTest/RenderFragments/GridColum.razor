@@ -1,0 +1,22 @@
+﻿
+<th>
+    <div class="col-10 row">
+        @ColumTitle
+        <input class="form-control" placeholder="search" @oninput="OnSearchTextChange" value="@Value"/>
+    </div>
+</th>
+
+@code {
+
+[Parameter]
+public string ColumTitle { get; set; }
+[CascadingParameter(Name = "ManualUpdateTable")]
+public string Value { get; set; }
+[Parameter]
+public EventCallback<ChangeEventArgs> OnSearchTextChange { get; set; }
+
+
+
+
+}
+

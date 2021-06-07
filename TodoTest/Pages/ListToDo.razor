@@ -1,31 +1,22 @@
-﻿<table class="table table-sm bg-dark text-muted">
-    <thead>
-        <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Label</th>
-            <th scope="col">Description</th>
-            <th scope="col">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var r in Todos)
-        {
-            <tr>
-                <td>@r.LocalTime</td>
-                <td>@r.Label</td>
-                <td>@r.Description</td>
-                <td>@r.Priority<br />@r.Status</td>
-            </tr>
-
-        }
-    </tbody>
-</table>
+﻿<CustomTable Items="TodosSorted">
+    <TableHeader>
+        <GridColum ColumTitle="Label"
+                   OnSearchTextChange="@(e =>SearchTermChanged(e, "Label"))" />
+        <GridColum ColumTitle="Description"
+                   OnSearchTextChange="@(e =>SearchTermChanged(e, "Description"))" />
+    </TableHeader>
+    <RowTemplate Context="t">
+        <td>@t.Date</td>
+        <td>@t.Label</td>
+        <td>@t.Description</td>
+    </RowTemplate>
+</CustomTable>
 
 @code {
     MongoCRUD mydb = new MongoCRUD("MyMongoDb");
     TodoModel todo = new TodoModel();
     List<TodoModel> Todos;
+    List<TodoModel> TodosSorted;
     protected override Task OnInitializedAsync()
     {
         GetData();
@@ -38,5 +29,25 @@
         //    ListAll.Clear();
         //}
         Todos = mydb.LoadRecords<TodoModel>(todo.Table);
+        if (TodosSorted == null)
+        {
+            TodosSorted = Todos;
+        }
+    }
+    private void SearchTermChanged(ChangeEventArgs changeEventArgs, string columTitle)
+    {
+
+        string searchText = changeEventArgs.Value.ToString();
+        Console.WriteLine(searchText);
+        if (columTitle == "Label")
+        {
+            TodosSorted = Todos.Where(t => t.Label.Contains
+            (searchText, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        if (columTitle == "Description")
+        {
+            TodosSorted = Todos.Where(t => t.Description.Contains
+            (searchText)).ToList();
+        }
     }
 }

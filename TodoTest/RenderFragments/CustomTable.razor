@@ -1,0 +1,32 @@
+﻿@typeparam TItem
+<div class="table-wrapper-scroll-y my-custom-scrollbar">
+    <table class="table table-sm bg-dark text-muted">
+        <thead class="bg-dark text-light sticky-top">
+            @TableHeader
+        </thead>
+        <tbody>
+            
+            @foreach (var item in Items)
+            {
+
+                <tr id="@i">
+                    @RowTemplate(item)
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</div>
+    
+    
+@code {
+    [Parameter]
+    public RenderFragment TableHeader { get; set; }
+    [Parameter]
+    public RenderFragment<TItem> RowTemplate { get; set; }
+    [Parameter]
+    public IReadOnlyList<TItem> Items { get; set; }
+    [Parameter]
+    public int i { get; set; }
+
+}
