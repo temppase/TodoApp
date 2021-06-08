@@ -10,7 +10,7 @@
 
 [Parameter]
 public string ColumTitle { get; set; }
-[CascadingParameter(Name = "ManualUpdateTable")]
+[Parameter]
 public string Value { get; set; }
 [Parameter]
 public EventCallback<ChangeEventArgs> OnSearchTextChange { get; set; }

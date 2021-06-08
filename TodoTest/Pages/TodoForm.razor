@@ -1,0 +1,74 @@
+﻿@inject NavigationManager NavigationManager
+<h5>Add ToDo</h5>
+<EditForm Model="@todo" OnValidSubmit="@AddRecord">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label for="Label">Todo:</label>
+        <InputText id="Label"
+                   placeholder="Todo"
+                   @bind-Value="todo.Label"
+                   class="form-control-sm bg-dark text-muted my-2 mx-2" />
+    </div>
+    <div class="form-group">
+        <label for="Description">Descript:</label>
+        <InputTextArea id="Description"
+                       placeholder="Description"
+                       @bind-Value="todo.Description"
+                       class="form-control-sm bg-dark text-muted my-2 mx-2"
+                       row="5" />
+    </div>
+    <div class="form-group">
+        <label for="Status">Status   :</label>
+        <InputSelect id="Priority"
+                     @bind-Value="todo.Priority"
+                     class="form-control-sm bg-dark text-muted my-2 mx-2">
+            <option value=""></option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+        </InputSelect>
+        <InputSelect id="Status"
+                     @bind-Value="todo.Status"
+                     class="form-control-sm bg-dark text-muted my-2 mx-2">
+            <option value=""></option>
+            <option value="Todo">Todo</option>
+            <option value="Started">Started</option>
+        </InputSelect>
+    </div>
+    <ValidationSummary />
+        <button class="btn btn-primary btn-sm"
+                type="submit">
+            Save
+        </button>
+
+</EditForm>
+
+@code {
+    MongoCRUD mydb = new MongoCRUD("MyMongoDb");
+    TodoModel todo = new TodoModel();
+    private string Message { get; set; }
+    public void Invalid()
+    {
+        Message = "Todo required";
+    }
+    public void AddRecord()
+    {
+        DateTime date = DateTime.Now;
+        Console.WriteLine($"     Record: {todo.Label} | {todo.Description}");
+        mydb.InsertRecord(todo.Table,
+                            new TodoModel
+                            {
+                                Date = date,
+                                LocalTime = date.ToString("yyyy.MM.dd HH:mm"),
+                                Label = todo.Label,
+                                Description = todo.Description,
+                                Priority = todo.Priority,
+                                Status = todo.Status
+                            });
+        todo.Label = "";
+        todo.Description = "";
+        todo.Priority = "";
+        todo.Status = "";
+        NavigationManager.NavigateTo("todoapp", true);
+    }
+}

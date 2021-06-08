@@ -13,11 +13,18 @@
         <td>@t.LocalTime</td>
         <td>@t.Label</td>
         <td>@t.Description <br /><em class="text-warning">Status: @t.Status</em></td>
-        <td class="text-warning">@t.Priority</td>
+        <td class="text-warning">
+            @t.Priority <br />
+            <a class="btn btn-primary btn-sm"
+               href=@($"update/{IDset = t.Id.ToString()}")>
+                Mod.
+            </a>
+        </td>
     </RowTemplate>
 </CustomTable>
 
 @code {
+    public string IDset { get; set; }
     MongoCRUD mydb = new MongoCRUD("MyMongoDb");
     TodoModel todo = new TodoModel();
     List<TodoModel> Todos;
@@ -29,10 +36,7 @@
     }
     public void GetData()
     {
-        //if (ListAll != null)
-        //{
-        //    ListAll.Clear();
-        //}
+        
         Todos = mydb.LoadRecords<TodoModel>(todo.Table);
         if (TodosSorted == null)
         {
@@ -65,17 +69,5 @@
             (searchText, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
-    //private void SearchDateChanged(ChangeEventArgs changeEventArgs, string columTitle)
-    //{
-
-    //    string searchText = changeEventArgs.Value.ToString();
-    //    Console.WriteLine(searchText);
-    //    if (columTitle == "Date")
-    //    {
-
-    //        TodosSorted = Todos.Where(t => t.LocalTime.Contains
-    //        (searchText)).ToList();
-    //    }
-
-    //}
+    
 }

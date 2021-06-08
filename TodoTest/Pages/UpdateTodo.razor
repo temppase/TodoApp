@@ -1,66 +1,76 @@
 ﻿@page "/update/{IDset}"
 <h3 style="font-weight:bold">Update Todo</h3>
 <hr />
-@if (Deleted == "")
-{
-    <h5 style="font-weight:bold">@Updated.Label</h5>
-    <div class="row">
-        <div class="col-2" />
-        <div class="col-4">
+<div class="row">
+    @if (Deleted == "")
+    {
+        
+
+        <div class="col-4 mx-2">
+            <h5 style="font-weight:bold">@Updated.Label</h5><br />
             <h5>@Updated.Description</h5>
             <br />
             <p>@Updated.Priority</p>
             <br />
             <p>@Updated.Status</p>
         </div>
-    </div>
 
-    <hr />
-    <EditForm Model="@todo">
-        <div class="row">
-            <div class="col-2">
+        <div class="col-4 mx-2">
+            <EditForm Model="@todo" OnValidSubmit="@Update">
+                <div class="form-group">
+                    <label for="Label">Todo:</label>
+                    <InputText id="Label"
+                               placeholder="Todo"
+                               @bind-Value="label"
+                               class="form-control-sm bg-dark text-muted my-2 mx-2" />
+                </div>
+                <div class="form-group">
+                    <label for="Description">Descript:</label>
+                    <InputTextArea id="Description"
+                                   placeholder="Description"
+                                   @bind-Value="description"
+                                   class="form-control-sm bg-dark text-muted my-2 mx-2"
+                                   row="5" />
+                </div>
+                <div class="form-group">
+                    <label for="Status">Status   :</label>
+                    <InputSelect id="Priority"
+                                 @bind-Value="prior"
+                                 class="form-control-sm bg-dark text-muted my-2 mx-2">
+                        <option value=""></option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </InputSelect>
+                    <InputSelect id="Status"
+                                 @bind-Value="stat"
+                                 class="form-control-sm bg-dark text-muted my-2 mx-2">
+                        <option value=""></option>
+                        <option value="Todo">Todo</option>
+                        <option value="Started">Started</option>
+                    </InputSelect>
+                </div>
                 <button class="btn btn-primary btn-sm"
-                        type="submit"
-                        @onclick="UpdateLabel">
-                    Label
-                </button><br /><br />
-                <button class="btn btn-primary btn-sm"
-                        type="submit"
-                        @onclick="UpdateDescription">
-                    Description
-                </button><br /><br /><br />
-                <button class="btn btn-primary btn-sm"
-                        type="submit"
-                        @onclick="UpdateStatus">
-                    Status
+                        type="submit">
+                    Update
                 </button>
-            </div>
-            <div class="col-3">
-                <InputText id="Label" @bind-Value="label" style="background-color:gray"/><br /><br />
-                <InputTextArea id="Description" @bind-Value="description" style="background-color:gray"/><br /><br />
-                <InputSelect id="Priority" @bind-Value="Prior" style="background-color:gray">
-                    <option value=""></option>
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                </InputSelect>
-                <InputSelect id="Status" @bind-Value="Stat" style="background-color:gray">
-                    <option value=""></option>
-                    <option value="Todo">Todo</option>
-                    <option value="Started">Started</option>
-                    <option value="Finished">Finished</option>
-                </InputSelect>
-            </div>
-            <div class="col-2">
-                <button class="btn btn-danger btn-sm" @onclick="DeleteRecord">Delete</button>
-            </div>
+
+            </EditForm>
         </div>
-    </EditForm>
-}
-else
-{
+        <div class="col-2">
+            <button @onclick="DeleteRecord"
+                    class="btn btn-danger btn-sm"
+                    type="submit">
+                Delete
+            </button>
+        </div>
+    }
+    else
+    {
     <h3>@Deleted</h3>
-}
+    }
+</div>
+
 
 @code {
     MongoCRUD mydb = new MongoCRUD("MyMongoDb");
@@ -74,9 +84,9 @@ else
     [Parameter]
     public string description { get; set; }
     [Parameter]
-    public string Prior { get; set; }
+    public string prior { get; set; }
     [Parameter]
-    public string Stat { get; set; }
+    public string stat { get; set; }
     protected override Task OnInitializedAsync()
     {
         GetTodo();
@@ -88,9 +98,33 @@ else
         Updated = mydb.LoadRecordById<TodoModel>(todo.Table, Id);
 
     }
-    public void UpdateLabel()
+    public void Update()
     {
-        Console.WriteLine($"     Update label ID: {IDset.ToString()}");
+        if (label == null || label == "")
+        {
+            label = Updated.Label;
+        }
+        if (description == null || description == "")
+        {
+            description = Updated.Description;
+        }
+        if (prior == null || prior == "")
+        {
+            prior = Updated.Priority;
+        }
+        if (stat == null || stat == "")
+        {
+            stat = Updated.Status;
+        }
+        if (label.Length > 15)
+        {
+            label = label.Substring(0, 15);
+        }
+        if (description.Length > 200)
+        {
+            description = description.Substring(0, 200);
+        }
+        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
         Guid Id = new Guid(IDset);
         mydb.UpsertRecord(todo.Table, Id,
                                 new TodoModel
@@ -99,49 +133,53 @@ else
                                     Date = DateTime.Now,
                                     LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
                                     Label = label,
-                                    Description = Updated.Description,
-                                    Priority = Updated.Priority,
-                                    Status = Updated.Status
-                                });
-        label = "";
-        OnInitializedAsync();
-    }
-    public void UpdateDescription()
-    {
-        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
-        Guid Id = new Guid(IDset);
-        mydb.UpsertRecord(todo.Table, Id,
-                                new TodoModel
-                                {
-                                    Id = Id,
-                                    Date = DateTime.Now,
-                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
-                                    Label = Updated.Label,
                                     Description = description,
-                                    Priority = Updated.Priority,
-                                    Status = Updated.Status
+                                    Priority = prior,
+                                    Status = stat
                                 });
         description = "";
+        label = "";
+        prior = "";
+        stat = "";
         OnInitializedAsync();
     }
-    public void UpdateStatus()
-    {
-        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
-        Guid Id = new Guid(IDset);
-        mydb.UpsertRecord(todo.Table, Id,
-                                new TodoModel
-                                {
-                                    Id = Id,
-                                    Date = DateTime.Now,
-                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
-                                    Label = Updated.Label,
-                                    Description = Updated.Description,
-                                    Priority = Prior,
-                                    Status = Stat
-                                });
-        description = "";
-        OnInitializedAsync();
-    }
+
+    //public void UpdateDescription()
+    //{
+    //    Console.WriteLine($"     Update description ID: {IDset.ToString()}");
+    //    Guid Id = new Guid(IDset);
+    //    mydb.UpsertRecord(todo.Table, Id,
+    //                            new TodoModel
+    //                            {
+    //                                Id = Id,
+    //                                Date = DateTime.Now,
+    //                                LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+    //                                Label = Updated.Label,
+    //                                Description = description,
+    //                                Priority = Updated.Priority,
+    //                                Status = Updated.Status
+    //                            });
+    //    description = "";
+    //    OnInitializedAsync();
+    //}
+    //public void UpdateStatus()
+    //{
+    //    Console.WriteLine($"     Update description ID: {IDset.ToString()}");
+    //    Guid Id = new Guid(IDset);
+    //    mydb.UpsertRecord(todo.Table, Id,
+    //                            new TodoModel
+    //                            {
+    //                                Id = Id,
+    //                                Date = DateTime.Now,
+    //                                LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+    //                                Label = Updated.Label,
+    //                                Description = Updated.Description,
+    //                                Priority = prior,
+    //                                Status = stat
+    //                            });
+    //    description = "";
+    //    OnInitializedAsync();
+    //}
     public void DeleteRecord()
     {
         Guid Id = new Guid(IDset);

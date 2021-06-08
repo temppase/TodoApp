@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace TodoTest.Data
 {
@@ -13,9 +14,15 @@ namespace TodoTest.Data
         public Guid Id { get; set; }
         public DateTime Date { get; set; }
         public string LocalTime { get; set; }
+        [Required]
+        [StringLength(15, ErrorMessage = "Name is too long.")]
         public string Label { get; set; }
+        [StringLength(200, ErrorMessage = "Name is too long.")]
         public string Description { get; set; }
+        [Required]
         public string Priority { get; set; }
+        [Required]
         public string Status { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }
