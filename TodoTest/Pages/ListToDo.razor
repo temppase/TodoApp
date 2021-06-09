@@ -10,6 +10,7 @@
                    OnSearchTextChange="@(e =>SearchTermChanged(e, "Priority"))" />
     </TableHeader>
     <RowTemplate Context="t">
+
         <td>@t.LocalTime</td>
         <td>@t.Label</td>
         <td>@t.Description <br /><em class="text-warning">Status: @t.Status</em></td>

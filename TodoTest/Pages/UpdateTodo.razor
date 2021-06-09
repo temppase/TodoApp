@@ -144,42 +144,6 @@
         OnInitializedAsync();
     }
 
-    //public void UpdateDescription()
-    //{
-    //    Console.WriteLine($"     Update description ID: {IDset.ToString()}");
-    //    Guid Id = new Guid(IDset);
-    //    mydb.UpsertRecord(todo.Table, Id,
-    //                            new TodoModel
-    //                            {
-    //                                Id = Id,
-    //                                Date = DateTime.Now,
-    //                                LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
-    //                                Label = Updated.Label,
-    //                                Description = description,
-    //                                Priority = Updated.Priority,
-    //                                Status = Updated.Status
-    //                            });
-    //    description = "";
-    //    OnInitializedAsync();
-    //}
-    //public void UpdateStatus()
-    //{
-    //    Console.WriteLine($"     Update description ID: {IDset.ToString()}");
-    //    Guid Id = new Guid(IDset);
-    //    mydb.UpsertRecord(todo.Table, Id,
-    //                            new TodoModel
-    //                            {
-    //                                Id = Id,
-    //                                Date = DateTime.Now,
-    //                                LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
-    //                                Label = Updated.Label,
-    //                                Description = Updated.Description,
-    //                                Priority = prior,
-    //                                Status = stat
-    //                            });
-    //    description = "";
-    //    OnInitializedAsync();
-    //}
     public void DeleteRecord()
     {
         Guid Id = new Guid(IDset);

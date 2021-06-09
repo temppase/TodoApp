@@ -1,0 +1,113 @@
+﻿<SubHeader Title="Todo's"/>
+<ul class="list-group">
+    @foreach (var t in Todos)
+    {
+        @if (t.IsCompleted)
+        {
+            <li class="list-group-item list-group-item-secondary my-2"
+                @onmouseover="(()=>IDset = t.Id.ToString())"
+                @onclick="CompleteTodo">
+
+                <del style="font-weight:bold">@t.Label</del>
+                <del class="mx-2">@t.Description</del>
+                
+            </li>
+        }
+        else
+        {
+            <li class="list-group-item list-group-item-success my-2"
+                @onmouseover="(()=>IDset = t.Id.ToString())"
+                @onclick="CompleteTodo">
+                <p style="font-weight:bold">@t.Label</p>
+                <p class="mx-2">@t.Description</p>
+                <p class="mx-2">Status: @t.Status | @t.Priority</p>
+            </li>
+        }
+    }
+</ul>
+<button class="btn btn-danger btn-sm"
+        @onclick="DeleteRecords">
+    Delete completed
+</button>
+@code {
+
+    public string IDset { get; set; }
+    MongoCRUD mydb = new MongoCRUD("MyMongoDb");
+    TodoModel todo = new TodoModel();
+    TodoModel Complete = new TodoModel();
+    List<TodoModel> Todos;
+    protected override Task OnInitializedAsync()
+    {
+        GetData();
+        return base.OnInitializedAsync();
+    }
+    public void GetData()
+    {
+
+        Todos = mydb.LoadRecords<TodoModel>(todo.Table);
+
+    }
+    public void CompleteTodo()
+    {
+        GetTodo();
+        Update();
+        OnInitializedAsync();
+    }
+    public void GetTodo()
+    {
+        Guid Id = new Guid(IDset);
+        Complete = mydb.LoadRecordById<TodoModel>(todo.Table, Id);
+
+    }
+    public void Update()
+    {
+        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
+        Guid Id = new Guid(IDset);
+        if (Complete.IsCompleted == false)
+        {
+            mydb.UpsertRecord(todo.Table, Id,
+                                new TodoModel
+                                {
+                                    Id = Id,
+                                    Date = DateTime.Now,
+                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+                                    Label = Complete.Label,
+                                    Description = Complete.Description,
+                                    Priority = Complete.Priority,
+                                    Status = Complete.Status,
+                                    IsCompleted = true
+                                });
+        }
+        else
+        {
+            mydb.UpsertRecord(todo.Table, Id,
+                                new TodoModel
+                                {
+                                    Id = Id,
+                                    Date = DateTime.Now,
+                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+                                    Label = Complete.Label,
+                                    Description = Complete.Description,
+                                    Priority = Complete.Priority,
+                                    Status = Complete.Status,
+                                    IsCompleted = false
+                                });
+        }
+        OnInitializedAsync();
+    }
+    public void DeleteRecords()
+    {
+        foreach (var t in Todos)
+        {
+            if (t.IsCompleted == true)
+            {
+                Guid Id = t.Id;
+                Console.WriteLine($"     Delete ID: {t.Id.ToString()} | Label : {t.Label}");
+                mydb.DeleteRecord<TodoModel>(todo.Table, Id);
+            }
+
+        }
+
+        OnInitializedAsync();
+    }
+}
