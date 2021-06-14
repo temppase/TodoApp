@@ -6,22 +6,55 @@
         {
             <li class="list-group-item list-group-item-secondary my-2"
                 @onmouseover="(()=>IDset = t.Id.ToString())"
-                @onclick="CompleteTodo">
+                @onclick="UnCompleteTodo">
 
                 <del style="font-weight:bold">@t.Label</del>
                 <del class="mx-2">@t.Description</del>
-                
+
             </li>
         }
         else
         {
-            <li class="list-group-item list-group-item-success my-2"
-                @onmouseover="(()=>IDset = t.Id.ToString())"
-                @onclick="CompleteTodo">
-                <p style="font-weight:bold">@t.Label</p>
-                <p class="mx-2">@t.Description</p>
-                <p class="mx-2">Status: @t.Status | @t.Priority</p>
-            </li>
+            if (t.Priority == "High")
+            {
+                <li class="list-group-item list-group-item-danger my-2"
+                    @onmouseover="(()=>IDset = t.Id.ToString())"
+                    @onclick="CompleteTodo">
+                    <p style="font-weight:bold">@t.Label</p>
+                    <p class="mx-2">@t.Description</p>
+                    @if (t.Status == "Started")
+                    {
+                        <p class="mx-2">@t.Status : @t.LocalTime</p>
+                    }
+
+                </li>
+            }
+            if (t.Priority == "Medium")
+            {
+                <li class="list-group-item list-group-item-success my-2"
+                    @onmouseover="(()=>IDset = t.Id.ToString())"
+                    @onclick="CompleteTodo">
+                    <p style="font-weight:bold">@t.Label</p>
+                    <p class="mx-2">@t.Description</p>
+                    @if (t.Status == "Started")
+                    {
+                        <p class="mx-2">@t.Status : @t.LocalTime</p>
+                    }
+                </li>
+            }
+            if (t.Priority == "Low")
+            {
+                <li class="list-group-item list-group-item-warning my-2"
+                    @onmouseover="(()=>IDset = t.Id.ToString())"
+                    @onclick="CompleteTodo">
+                    <p style="font-weight:bold">@t.Label</p>
+                    <p class="mx-2">@t.Description</p>
+                    @if (t.Status == "Started")
+                    {
+                        <p class="mx-2">@t.Status : @t.LocalTime</p>
+                    }
+                </li>
+            }
         }
     }
 </ul>
@@ -36,6 +69,7 @@
     TodoModel todo = new TodoModel();
     TodoModel Complete = new TodoModel();
     List<TodoModel> Todos;
+    Tables table = new Tables();
     protected override Task OnInitializedAsync()
     {
         GetData();
@@ -44,66 +78,63 @@
     public void GetData()
     {
 
-        Todos = mydb.LoadRecords<TodoModel>(todo.Table);
+        Todos = mydb.LoadRecords<TodoModel>(table.Todo);
 
     }
     public void CompleteTodo()
     {
         GetTodo();
-        Update();
+        Console.WriteLine($"     Complete ID: {IDset.ToString()}");
+        ObjectId Id = new ObjectId(IDset);
+        mydb.UpsertRecord(table.Todo, Id,
+                        new TodoModel
+                        {
+                            Id = Id,
+                            Date = DateTime.Now,
+                            LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+                            Label = Complete.Label,
+                            Description = Complete.Description,
+                            Priority = Complete.Priority,
+                            Status = Complete.Status,
+                            IsCompleted = true
+                        });
+        OnInitializedAsync();
+    }
+    public void UnCompleteTodo()
+    {
+        GetTodo();
+        Console.WriteLine($"     UnComplete ID: {IDset.ToString()}");
+        ObjectId Id = new ObjectId(IDset);
+        mydb.UpsertRecord(table.Todo, Id,
+                        new TodoModel
+                        {
+                            Id = Id,
+                            Date = DateTime.Now,
+                            LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+                            Label = Complete.Label,
+                            Description = Complete.Description,
+                            Priority = Complete.Priority,
+                            Status = Complete.Status,
+                            IsCompleted = false
+                        });
         OnInitializedAsync();
     }
     public void GetTodo()
     {
-        Guid Id = new Guid(IDset);
-        Complete = mydb.LoadRecordById<TodoModel>(todo.Table, Id);
+        ObjectId Id = new ObjectId(IDset);
+        Complete = mydb.LoadRecordById<TodoModel>(table.Todo, Id);
 
     }
-    public void Update()
-    {
-        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
-        Guid Id = new Guid(IDset);
-        if (Complete.IsCompleted == false)
-        {
-            mydb.UpsertRecord(todo.Table, Id,
-                                new TodoModel
-                                {
-                                    Id = Id,
-                                    Date = DateTime.Now,
-                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
-                                    Label = Complete.Label,
-                                    Description = Complete.Description,
-                                    Priority = Complete.Priority,
-                                    Status = Complete.Status,
-                                    IsCompleted = true
-                                });
-        }
-        else
-        {
-            mydb.UpsertRecord(todo.Table, Id,
-                                new TodoModel
-                                {
-                                    Id = Id,
-                                    Date = DateTime.Now,
-                                    LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
-                                    Label = Complete.Label,
-                                    Description = Complete.Description,
-                                    Priority = Complete.Priority,
-                                    Status = Complete.Status,
-                                    IsCompleted = false
-                                });
-        }
-        OnInitializedAsync();
-    }
+
     public void DeleteRecords()
     {
         foreach (var t in Todos)
         {
             if (t.IsCompleted == true)
             {
-                Guid Id = t.Id;
+                ObjectId Id = t.Id;
                 Console.WriteLine($"     Delete ID: {t.Id.ToString()} | Label : {t.Label}");
-                mydb.DeleteRecord<TodoModel>(todo.Table, Id);
+                mydb.DeleteRecord<TodoModel>(table.Todo, Id);
             }
 
         }

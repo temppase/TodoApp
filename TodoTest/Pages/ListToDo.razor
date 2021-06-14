@@ -4,22 +4,28 @@
                    OnSearchTextChange="@(e =>SearchTermChanged(e, "Date"))" />
         <GridColum ColumTitle="Label"
                    OnSearchTextChange="@(e =>SearchTermChanged(e, "Label"))" />
-        <GridColum ColumTitle="Description"
+        <GridColum ColumTitle="Desc"
                    OnSearchTextChange="@(e =>SearchTermChanged(e, "Description"))" />
-        <GridColum ColumTitle="Priority"
+        <GridColum ColumTitle="Prior"
                    OnSearchTextChange="@(e =>SearchTermChanged(e, "Priority"))" />
+        <GridColum ColumTitle="Stat"
+                   OnSearchTextChange="@(e =>SearchTermChanged(e, "Status"))" />
     </TableHeader>
     <RowTemplate Context="t">
 
         <td>@t.LocalTime</td>
-        <td>@t.Label</td>
-        <td>@t.Description <br /><em class="text-warning">Status: @t.Status</em></td>
-        <td class="text-warning">
-            @t.Priority <br />
-            <a class="btn btn-primary btn-sm"
-               href=@($"update/{IDset = t.Id.ToString()}")>
-                Mod.
+        <td @onmouseover="(()=>IDset = t.Id.ToString())">
+            <a class="nav-link"
+               href=@($"update/{IDset}")>
+                @t.Label
             </a>
+        </td>
+        <td>@t.Description</td>
+        <td class="text-warning">
+            @t.Priority
+        </td>
+        <td class="text-warning">
+            @t.Status
         </td>
     </RowTemplate>
 </CustomTable>
@@ -30,6 +36,7 @@
     TodoModel todo = new TodoModel();
     List<TodoModel> Todos;
     List<TodoModel> TodosSorted;
+    Tables table = new Tables();
     protected override Task OnInitializedAsync()
     {
         GetData();
@@ -38,7 +45,7 @@
     public void GetData()
     {
         
-        Todos = mydb.LoadRecords<TodoModel>(todo.Table);
+        Todos = mydb.LoadRecords<TodoModel>(table.Todo);
         if (TodosSorted == null)
         {
             TodosSorted = Todos;
@@ -67,6 +74,11 @@
         if (columTitle == "Priority")
         {
             TodosSorted = Todos.Where(t => t.Priority.Contains
+            (searchText, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+        if (columTitle == "Status")
+        {
+            TodosSorted = Todos.Where(t => t.Status.Contains
             (searchText, StringComparison.OrdinalIgnoreCase)).ToList();
         }
     }
