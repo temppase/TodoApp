@@ -20,50 +20,71 @@
                 <li class="list-group-item list-group-item-danger my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <p style="font-weight:bold">@t.Label</p>
-                    <p class="mx-2">@t.Description</p>
+                    <p @onmouseover="(()=> description = t.Description)"
+                       style="font-weight:bold">@t.Label</p>
                     @if (t.Status == "Started")
                     {
                         <p class="mx-2">@t.Status : @t.LocalTime</p>
                     }
 
                 </li>
+                if (description == t.Description)
+                {
+                    <li class="list-group-item list-group-item-secondary my-2 mx-2">
+                        @description
+                    </li>
+                }
             }
             if (t.Priority == "Medium")
             {
                 <li class="list-group-item list-group-item-success my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <p style="font-weight:bold">@t.Label</p>
-                    <p class="mx-2">@t.Description</p>
+                    <p @onmouseover="(()=> description = t.Description)"
+                       style="font-weight:bold">@t.Label</p>
+
                     @if (t.Status == "Started")
                     {
                         <p class="mx-2">@t.Status : @t.LocalTime</p>
                     }
                 </li>
+                if (description == t.Description)
+                {
+                    <li class="list-group-item list-group-item-secondary my-2 mx-2">
+                        @description
+                    </li>
+                }
             }
             if (t.Priority == "Low")
             {
                 <li class="list-group-item list-group-item-warning my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <p style="font-weight:bold">@t.Label</p>
-                    <p class="mx-2">@t.Description</p>
+                    <p @onmouseover="(()=> description = t.Description)"
+                       style="font-weight:bold">@t.Label</p>
                     @if (t.Status == "Started")
                     {
                         <p class="mx-2">@t.Status : @t.LocalTime</p>
                     }
                 </li>
+                if (description == t.Description)
+                {
+                    <li class="list-group-item list-group-item-secondary my-2 mx-2">
+                        @description
+                    </li>
+                }
             }
         }
     }
 </ul>
+
 <button class="btn btn-danger btn-sm"
         @onclick="DeleteRecords">
     Delete completed
 </button>
 @code {
-
+    [Parameter]
+    public string description { get; set; }
     public string IDset { get; set; }
     MongoCRUD mydb = new MongoCRUD("MyMongoDb");
     TodoModel todo = new TodoModel();

@@ -19,8 +19,8 @@
                 <li @onmouseover="(()=>IDset = Updated.Id.ToString())"
                     @onclick="CompleteTodo"
                     class="list-group-item list-group-item-success my-2">
-                    <h5 style="font-weight:bold">@Updated.Label</h5>
-                    <h5>@Updated.Description</h5>
+                    <h5 @onmouseover="(()=> label = Updated.Label)" style="font-weight:bold">@Updated.Label</h5>
+                    <h5 @onmouseover="(()=> description = Updated.Description)">@Updated.Description</h5>
                     <p>@Updated.Priority | @Updated.Status</p>
                 </li>
             }
