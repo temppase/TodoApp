@@ -1,10 +1,10 @@
-﻿<SubHeader Title="Todo's"/>
+﻿<SubHeader Title="Todo's" Description="Click to complete. Mouse over info"/>
 <ul class="list-group">
     @foreach (var t in Todos)
     {
         @if (t.IsCompleted)
         {
-            <li class="list-group-item list-group-item-secondary my-2"
+            <li class="list-group-item list-group-item-primary my-2"
                 @onmouseover="(()=>IDset = t.Id.ToString())"
                 @onclick="UnCompleteTodo">
 
@@ -20,13 +20,12 @@
                 <li class="list-group-item list-group-item-danger my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <p @onmouseover="(()=> description = t.Description)"
-                       style="font-weight:bold">@t.Label</p>
-                    @if (t.Status == "Started")
-                    {
-                        <p class="mx-2">@t.Status : @t.LocalTime</p>
-                    }
-
+                    <strong @onmouseover="@(()=> description = t.Description)">
+                        @t.Label
+                    </strong>
+                    <span @onmouseover="@(()=> description = t.Description)">
+                        Created: @t.LocalTime, Status: @t.Status
+                    </span>
                 </li>
                 if (description == t.Description)
                 {
@@ -40,13 +39,12 @@
                 <li class="list-group-item list-group-item-success my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <p @onmouseover="(()=> description = t.Description)"
-                       style="font-weight:bold">@t.Label</p>
-
-                    @if (t.Status == "Started")
-                    {
-                        <p class="mx-2">@t.Status : @t.LocalTime</p>
-                    }
+                    <strong @onmouseover="@(()=> description = t.Description)">
+                        @t.Label
+                    </strong>
+                    <span @onmouseover="@(()=> description = t.Description)">
+                        Created: @t.LocalTime, Status: @t.Status
+                    </span>
                 </li>
                 if (description == t.Description)
                 {
@@ -60,12 +58,10 @@
                 <li class="list-group-item list-group-item-warning my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <p @onmouseover="(()=> description = t.Description)"
-                       style="font-weight:bold">@t.Label</p>
-                    @if (t.Status == "Started")
-                    {
-                        <p class="mx-2">@t.Status : @t.LocalTime</p>
-                    }
+                    <strong @onmouseover="@(()=> description = t.Description)">
+                        @t.Label
+                    </strong>
+                    <span @onmouseover="@(()=> description = t.Description)">Created: @t.LocalTime, Status: @t.Status</span>
                 </li>
                 if (description == t.Description)
                 {
@@ -144,7 +140,6 @@
     {
         ObjectId Id = new ObjectId(IDset);
         Complete = mydb.LoadRecordById<TodoModel>(table.Todo, Id);
-
     }
 
     public void DeleteRecords()
@@ -162,4 +157,5 @@
 
         OnInitializedAsync();
     }
+
 }
