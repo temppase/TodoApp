@@ -4,7 +4,7 @@
 @if (Deleted == "")
 {
     <div class="row">
-        <ul class="list-group col-8">
+        <ul class="list-group col-12 mx-2">
             @if (Updated.IsCompleted)
             {
                 <li @onmouseover="(()=>IDset = Updated.Id.ToString())"
@@ -25,24 +25,13 @@
                 </li>
             }
         </ul>
-        <div class="col-sm-2">
-            <button @onclick="DeleteRecord"
-                    class="btn btn-danger btn-sm my-2"
-                    type="submit">
-                Delete
-            </button>
-            <button class="btn btn-primary btn-sm my-2"
-                    type="submit">
-                Update
-            </button>
-        </div>
     </div>
     <div class="col-10 mx-2 form-group">
         <EditForm Model="@todo" OnValidSubmit="@Update">
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"
                        for="Label">Todo:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <InputText id="Label"
                                placeholder="Todo"
                                @bind-Value="label"
@@ -50,7 +39,7 @@
                 </div>
                 <label class="col-sm-2 col-form-label"
                        for="Status">Status:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <InputSelect id="Status"
                                  @bind-Value="stat"
                                  class="form-control-sm bg-dark text-muted my-2 mx-2">
@@ -59,11 +48,17 @@
                         <option value="Started">Started</option>
                     </InputSelect>
                 </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary btn-sm my-2"
+                            type="submit">
+                        Update
+                    </button>
+                </div>
             </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label"
                        for="Description">Descript:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <InputTextArea id="Description"
                                    placeholder="Description"
                                    @bind-Value="description"
@@ -71,7 +66,7 @@
                 </div>
                 <label class="col-sm-2 col-form-label"
                        for="Status">Priority:</label>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <InputSelect id="Priority"
                                  @bind-Value="prior"
                                  class="form-control-sm bg-dark text-muted my-2 mx-2">
@@ -80,6 +75,13 @@
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
                     </InputSelect>
+                </div>
+                <div class="col-sm-2">
+                    <button @onclick="DeleteRecord"
+                            class="btn btn-danger btn-sm my-2"
+                            type="submit">
+                        Delete
+                    </button>
                 </div>
             </div>
  
