@@ -154,7 +154,7 @@ else
         {
             description = description.Substring(0, 200);
         }
-        Console.WriteLine($"     Update description ID: {IDset.ToString()}");
+        Console.WriteLine($"     Update ID: {IDset.ToString()}");
         ObjectId Id = new ObjectId(IDset);
         mydb.UpsertRecord(table.Todo, Id,
                         new TodoModel

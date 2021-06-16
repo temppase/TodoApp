@@ -1,5 +1,5 @@
 ﻿<SubHeader Title="Todo's" Description="Click to complete. Mouse over info"/>
-<ul class="list-group">
+<ul class="list-group col-10">
     @foreach (var t in Todos)
     {
         @if (t.IsCompleted)
@@ -20,18 +20,50 @@
                 <li class="list-group-item list-group-item-danger my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <strong @onmouseover="@(()=> description = t.Description)">
+                    <strong style="border:solid;border-radius:30px;"
+                            class="mx-1 px-4 py-2"
+                            @onmouseover="@(()=> description = t.Description)">
                         @t.Label
                     </strong>
-                    <span @onmouseover="@(()=> description = t.Description)">
-                        Created: @t.LocalTime, Status: @t.Status
+                    <span style="border:solid;border-radius:30px;"
+                          class="mx-1 px-4 py-2"
+                          @onmouseover="@(()=> description = t.Description)">
+                        Created: @t.LocalTime.Substring(0,10) | Clock: @t.LocalTime.Substring(11) | Status: @t.Status
                     </span>
                 </li>
                 if (description == t.Description)
                 {
-                    <li class="list-group-item list-group-item-secondary my-2 mx-2">
+                    <li @onmouseover="@(()=>StatusUpdate = t)"
+                        class="list-group-item list-group-item-secondary my-1 mx-2">
                         @description
+                        <a class="btn-sm btn-primary mx-2"
+                           href=@($"update/{IDset}")>
+                            Update
+                        </a>
+                        <button @onmouseover="@(()=>prior = "High")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-danger">
+                            H
+                        </button>
+                        <button @onmouseover="@(()=>prior = "Medium")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-success">
+                            M
+                        </button>
+                        <button @onmouseover="@(()=>prior = "Low")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-warning">
+                            L
+                        </button>
+                        @if (t.Status == "Todo")
+                        {
+                            <button @onclick="Start"
+                                    class="btn-sm btn-primary">
+                                Start
+                            </button>
+                        }
                     </li>
+
                 }
             }
             if (t.Priority == "Medium")
@@ -39,18 +71,50 @@
                 <li class="list-group-item list-group-item-success my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <strong @onmouseover="@(()=> description = t.Description)">
+                    <strong style="border:solid;border-radius:30px;"
+                            class="mx-1 px-4 py-2"
+                            @onmouseover="@(()=> description = t.Description)">
                         @t.Label
                     </strong>
-                    <span @onmouseover="@(()=> description = t.Description)">
-                        Created: @t.LocalTime, Status: @t.Status
+                    <span style="border:solid;border-radius:30px;"
+                          class="mx-1 px-4 py-2"
+                          @onmouseover="@(()=> description = t.Description)">
+                        Created: @t.LocalTime.Substring(0, 10) | Clock: @t.LocalTime.Substring(11) | Status: @t.Status
                     </span>
                 </li>
                 if (description == t.Description)
                 {
-                    <li class="list-group-item list-group-item-secondary my-2 mx-2">
+                    <li @onmouseover="@(()=>StatusUpdate = t)"
+                        class="list-group-item list-group-item-secondary my-1 mx-2">
                         @description
+                        <a class="btn-sm btn-primary mx-2"
+                           href=@($"update/{IDset}")>
+                            Update
+                        </a>
+                        <button @onmouseover="@(()=>prior = "High")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-danger">
+                            H
+                        </button>
+                        <button @onmouseover="@(()=>prior = "Medium")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-success">
+                            M
+                        </button>
+                        <button @onmouseover="@(()=>prior = "Low")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-warning">
+                            L
+                        </button>
+                        @if (t.Status == "Todo")
+                        {
+                            <button @onclick="Start"
+                                    class="btn-sm btn-primary">
+                                Start
+                            </button>
+                        }
                     </li>
+                    
                 }
             }
             if (t.Priority == "Low")
@@ -58,33 +122,71 @@
                 <li class="list-group-item list-group-item-warning my-2"
                     @onmouseover="(()=>IDset = t.Id.ToString())"
                     @onclick="CompleteTodo">
-                    <strong @onmouseover="@(()=> description = t.Description)">
+                    <strong style="border:solid;border-radius:30px;"
+                            class="mx-1 px-4 py-2"
+                            @onmouseover="@(()=> description = t.Description)">
                         @t.Label
                     </strong>
-                    <span @onmouseover="@(()=> description = t.Description)">Created: @t.LocalTime, Status: @t.Status</span>
+                    <span style="border:solid;border-radius:30px;"
+                          class="mx-1 px-4 py-2"
+                          @onmouseover="@(()=> description = t.Description)">
+                        Created: @t.LocalTime.Substring(0, 10) | Clock: @t.LocalTime.Substring(11) | Status: @t.Status
+                    </span>
                 </li>
                 if (description == t.Description)
                 {
-                    <li class="list-group-item list-group-item-secondary my-2 mx-2">
+                    <li @onmouseover="@(()=>StatusUpdate = t)"
+                        class="list-group-item list-group-item-secondary my-1 mx-2">
                         @description
+                        <a class="btn-sm btn-primary mx-2"
+                           href=@($"update/{IDset}")>
+                            Update
+                        </a>
+                        <button @onmouseover="@(()=>prior = "High")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-danger">
+                            H
+                        </button>
+                        <button @onmouseover="@(()=>prior = "Medium")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-success">
+                            M
+                        </button>
+                        <button @onmouseover="@(()=>prior = "Low")"
+                                @onclick="UpdatePriority"
+                                class="btn-sm btn-warning">
+                            L
+                        </button>
+                        @if (t.Status == "Todo")
+                        {
+                            <button @onclick="Start"
+                                    class="btn-sm btn-primary">
+                                Start
+                            </button>
+                        }
                     </li>
+
                 }
             }
         }
     }
 </ul>
 
-<button class="btn btn-danger btn-sm"
+<button class="btn btn-danger btn-sm my-2"
         @onclick="DeleteRecords">
     Delete completed
 </button>
 @code {
     [Parameter]
     public string description { get; set; }
+    [Parameter]
     public string IDset { get; set; }
+    [Parameter]
+    public string prior { get; set; }
     MongoCRUD mydb = new MongoCRUD("MyMongoDb");
     TodoModel todo = new TodoModel();
     TodoModel Complete = new TodoModel();
+    TodoModel StatusUpdate = new TodoModel();
     List<TodoModel> Todos;
     Tables table = new Tables();
     protected override Task OnInitializedAsync()
@@ -157,5 +259,38 @@
 
         OnInitializedAsync();
     }
-
+    public void UpdatePriority()
+    {
+        Console.WriteLine(prior);
+        ObjectId Id = new ObjectId(IDset);
+        mydb.UpsertRecord(table.Todo, Id,
+                        new TodoModel
+                        {
+                            Id = Id,
+                            Date = DateTime.Now,
+                            LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+                            Label = StatusUpdate.Label,
+                            Description = StatusUpdate.Description,
+                            Priority = prior,
+                            Status = StatusUpdate.Status
+                        });
+        OnInitializedAsync();
+    }
+    public void Start()
+    {
+        Console.WriteLine("Start");
+        ObjectId Id = new ObjectId(IDset);
+        mydb.UpsertRecord(table.Todo, Id,
+                        new TodoModel
+                        {
+                            Id = Id,
+                            Date = DateTime.Now,
+                            LocalTime = DateTime.Now.ToString("yyyy.MM.dd HH:mm"),
+                            Label = StatusUpdate.Label,
+                            Description = StatusUpdate.Description,
+                            Priority = StatusUpdate.Priority,
+                            Status = "Started"
+                        });
+        OnInitializedAsync();
+    }
 }

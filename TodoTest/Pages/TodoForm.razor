@@ -11,6 +11,25 @@
                        @bind-Value="todo.Label"
                        class="form-control-sm bg-dark text-muted my-2 mx-2" />
         </div>
+        <label class="col-sm-2 col-form-label"
+               for="Status">Status   :</label>
+        <div class="col-sm-4">
+            <InputSelect id="Priority"
+                         @bind-Value="todo.Priority"
+                         class="form-control-sm bg-dark text-muted my-1 mx-2">
+                <option value=""></option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </InputSelect>
+            <InputSelect id="Status"
+                         @bind-Value="todo.Status"
+                         class="form-control-sm bg-dark text-muted my-1 mx-2">
+                <option value=""></option>
+                <option value="Todo">Todo</option>
+                <option value="Started">Started</option>
+            </InputSelect>
+        </div>
     </div>
     <div class="form-group row">
         <label class="col-sm-2 col-form-label"
@@ -19,38 +38,16 @@
             <InputTextArea id="Description"
                            placeholder="Description"
                            @bind-Value="todo.Description"
-                           class="form-control bg-dark text-muted my-2 mx-2" />
+                           class="form-control bg-dark text-muted my-1 mx-2" />
         </div>
-        
-    </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label"
-               for="Status">Status   :</label>
         <div class="col-sm-4">
-            <InputSelect id="Priority"
-                         @bind-Value="todo.Priority"
-                         class="form-control-sm bg-dark text-muted my-2 mx-2">
-                <option value=""></option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
-            </InputSelect>
-            <InputSelect id="Status"
-                         @bind-Value="todo.Status"
-                         class="form-control-sm bg-dark text-muted my-2 mx-2">
-                <option value=""></option>
-                <option value="Todo">Todo</option>
-                <option value="Started">Started</option>
-            </InputSelect>
+            <button class="btn btn-primary btn-sm"
+                    type="submit">
+                Save
+            </button>
         </div>
-        
     </div>
     <ValidationSummary />
-        <button class="btn btn-primary btn-sm"
-                type="submit">
-            Save
-        </button>
-
 </EditForm>
 
 @code {
